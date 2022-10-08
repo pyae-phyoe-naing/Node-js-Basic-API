@@ -10,6 +10,7 @@ router.get('/', controller.all);
 router.post('/', [validateToken, validateBody(PostSchema), saveFile, controller.add]);
 router.route('/:id')
     .get(validateParam(AllSchema.id, 'id'), controller.get)
-    .patch([validateToken,validateParam(AllSchema.id,'id'),validateBody(PostSchema), updateFile, controller.update]);
+    .patch([validateToken, validateParam(AllSchema.id, 'id'), validateBody(PostSchema), updateFile, controller.update])
+    .delete ([validateParam(AllSchema.id, 'id'), controller.drop]);
     
 module.exports = router;

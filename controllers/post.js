@@ -38,12 +38,23 @@ const update = async (req, res, next) => {
     delete req.body.user;
     req.body.user = userId;
     await DB.findByIdAndUpdate(post._id, req.body);
-    responseMsg(res, true, 'Update post', req.body);
+    let updatePost = await DB.findById(post._id);
+    responseMsg(res, true, 'Update post', updatePost);
 }
-
+const drop = async (req, res, next) => {
+    let post = await DB.findById(req.params.id);
+    if (post) {
+        deleteFile(post.image);
+        await DB.findByIdAndDelete(post._id);
+        responseMsg(res, true, 'Delete post', post);
+    } else {
+        next(new Error('Post not found with that ID'));
+    }
+}
 module.exports = {
     all,
     add,
     get,
-    update
+    update,
+    drop
 }
