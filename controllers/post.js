@@ -2,9 +2,12 @@ const DB = require('../schema/post');
 const {
     responseMsg
 } = require('../utils/helper');
+const {
+    deleteFile
+} = require('../utils/gallery');
 
 const all = async (req, res, next) => {
-    let posts = await DB.find();
+    let posts = await DB.find().populate('user cat', '-password -__v');
     responseMsg(res, true, 'Get all posts', posts);
 }
 const add = async (req, res, next) => {
@@ -15,15 +18,32 @@ const add = async (req, res, next) => {
     responseMsg(res, true, 'Add new post', post);
 }
 const get = async (req, res, next) => {
-    let post = await DB.findById(req.params.id).populate('cat', '-__v').populate('user', '-password -__v');
+    let post = await DB.findById(req.params.id).populate('user cat', '-password -__v');
     if (!post) {
         next(new Error('Post not found with that ID'));
         return;
     }
     responseMsg(res, true, 'Get single post', post);
 }
+const update = async (req, res, next) => {
+    let post = await DB.findById(req.params.id);
+    if (!post) {
+        next(new Error('Post not found with that ID'));
+        return;
+    }
+    if (req.body.image) {
+        deleteFile(post.image);
+    }
+    let userId = req.body.user._id;
+    delete req.body.user;
+    req.body.user = userId;
+    await DB.findByIdAndUpdate(post._id, req.body);
+    responseMsg(res, true, 'Update post', req.body);
+}
+
 module.exports = {
     all,
     add,
-    get
+    get,
+    update
 }
