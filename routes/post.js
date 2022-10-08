@@ -8,6 +8,10 @@ const { saveFile, updateFile } = require('../utils/gallery');
 
 router.get('/', controller.all);
 router.post('/', [validateToken, validateBody(PostSchema), saveFile, controller.add]);
+
+router.get('/cat/:id', validateParam(AllSchema.id, 'id'), controller.byCatId);
+router.get('/user/:id', validateParam(AllSchema.id, 'id'), controller.byUserId);
+
 router.route('/:id')
     .get(validateParam(AllSchema.id, 'id'), controller.get)
     .patch([validateToken, validateParam(AllSchema.id, 'id'), validateBody(PostSchema), updateFile, controller.update])

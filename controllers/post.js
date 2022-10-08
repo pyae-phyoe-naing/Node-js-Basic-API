@@ -51,10 +51,26 @@ const drop = async (req, res, next) => {
         next(new Error('Post not found with that ID'));
     }
 }
+const byCatId = async (req, res, next) => {
+    let cats = await DB.find({
+        cat: req.params.id
+    }).populate('user cat','-password -__V');
+    responseMsg(res, true, 'Cat ID by post', cats);
+
+}
+const byUserId = async (req, res, next) => {
+    let cats = await DB.find({
+        user: req.params.id
+    }).populate('user cat', '-password -__V');
+    responseMsg(res, true, 'User ID by post', cats);
+
+}
 module.exports = {
     all,
     add,
     get,
     update,
-    drop
+    drop,
+    byCatId,
+    byUserId
 }
