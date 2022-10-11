@@ -12,10 +12,12 @@ app.use(fileUpload());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const userRoute = require('./routes/user');
+const tagRoute = require('./routes/tag');
 const catRoute = require('./routes/category');
 const postRoute = require('./routes/post');
 
 app.use('/users', userRoute);
+app.use('/tags', tagRoute);
 app.use('/cats', catRoute);
 app.use('/posts', postRoute);
 
