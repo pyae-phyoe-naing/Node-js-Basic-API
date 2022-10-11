@@ -3,14 +3,21 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const fileUpload = require('express-fileupload');
 
 mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`);
 
 app.use(express.json());
+app.use(fileUpload());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const userRoute = require('./routes/user');
+const catRoute = require('./routes/category');
+const postRoute = require('./routes/post');
 
 app.use('/users', userRoute);
+app.use('/cats', catRoute);
+app.use('/posts', postRoute);
 
 app.use((err, req, res, next) => {
     err.status = err.status || 200;
