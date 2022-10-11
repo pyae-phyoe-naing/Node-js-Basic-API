@@ -24,8 +24,42 @@ const add = async (req, res, next) => {
     let tag = await new DB(req.body).save();
     responseMsg(res, true, 'Add new Tag', tag);
 }
+const get = async (req, res, next) => {
+    let tag = await DB.findById(req.params.id);
+    if (!tag) {
+        next(new Error('Tag not found with that ID'));
+        return;
+    }
+    responseMsg(res, true, 'Get single tag', tag);
+}
+const patch = async (req, res, next) => {
+    let tag = await DB.findById(req.params.id);
+    if (!tag) {
+        next(new Error('Tag not found with that ID'));
+        return;
+    }
+    if (req.body.image) {
+        deleteFile(tag.image);
+    }
+    await DB.findByIdAndUpdate(tag._id, req.body);
+    let updateTag = await DB.findById(tag._id);
+    responseMsg(res, true, 'Update tag', updateTag);
+}
+const drop = async (req, res, next) => {
+    let tag = await DB.findById(req.params.id);
+    if (!tag) {
+        next(new Error('Tag not found with that ID'));
+        return;
+    }
+    deleteFile(tag.image);
+     await DB.findByIdAndDelete(tag._id);
+    responseMsg(res, true, 'Delete tag', tag);
+}
 
 module.exports = {
     all,
-    add
+    add,
+    get,
+    patch,
+    drop
 }
