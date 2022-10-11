@@ -11,4 +11,22 @@ module.exports = {
         phone: Joi.string().required(),
         password: Joi.string().required()
     }),
+    TagSchema: Joi.object({
+        name: Joi.string().required(),
+        user:Joi.optional()
+    }),
+    CatSchema: Joi.object({
+        name: Joi.string().required()
+    }),
+    PostSchema: Joi.object({
+        cat: Joi.string().required(),
+        title: Joi.string().required(),
+        desc: Joi.string().required(),
+        user: Joi.optional()
+    }),
+    AllSchema: {
+        id: Joi.object({
+            id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
+        })
+    }
 }
