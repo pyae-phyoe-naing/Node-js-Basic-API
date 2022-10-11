@@ -13,10 +13,15 @@ module.exports = {
     }),
     TagSchema: Joi.object({
         name: Joi.string().required(),
-        user:Joi.optional()
+        user: Joi.optional()
     }),
     CatSchema: Joi.object({
         name: Joi.string().required()
+    }),
+    CommentSchema: Joi.object({
+        postId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+        content: Joi.string().required(),
+        user: Joi.optional()
     }),
     PostSchema: Joi.object({
         cat: Joi.string().required(),

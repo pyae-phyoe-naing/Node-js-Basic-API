@@ -15,11 +15,13 @@ const userRoute = require('./routes/user');
 const tagRoute = require('./routes/tag');
 const catRoute = require('./routes/category');
 const postRoute = require('./routes/post');
+const commentRoute = require('./routes/comment');
 
 app.use('/users', userRoute);
 app.use('/tags', tagRoute);
 app.use('/cats', catRoute);
 app.use('/posts', postRoute);
+app.use('/comments', commentRoute);
 
 app.use((err, req, res, next) => {
     err.status = err.status || 200;
