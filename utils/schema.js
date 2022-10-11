@@ -11,8 +11,13 @@ module.exports = {
         phone: Joi.string().required(),
         password: Joi.string().required()
     }),
+    TagSchema: Joi.object({
+        name: Joi.string().required(),
+        user: Joi.optional()
+    }),
     CatSchema: Joi.object({
-        name: Joi.string().required()
+        name: Joi.string().required(),
+        user: Joi.optional()
     }),
     PostSchema: Joi.object({
         cat: Joi.string().required(),

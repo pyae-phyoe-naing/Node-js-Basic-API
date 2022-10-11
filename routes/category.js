@@ -7,11 +7,11 @@ const {
     CatSchema,AllSchema
 } = require('../utils/schema');
 const {
-    validateBody,validateParam
+    validateBody,validateParam, validateToken
 } = require('../utils/validator');
 
 router.get('/', controller.all);
-router.post('/', validateBody(CatSchema), saveFile, controller.add);
+router.post('/', validateToken,validateBody(CatSchema), saveFile, controller.add);
 
 router.route('/:id')
     .get([validateParam(AllSchema.id,'id'),controller.get]);
