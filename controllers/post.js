@@ -1,4 +1,5 @@
 const DB = require('../schema/post');
+const commentDB = require('../schema/comment');
 const {
     responseMsg
 } = require('../utils/helper');
@@ -19,6 +20,13 @@ const add = async (req, res, next) => {
 }
 const get = async (req, res, next) => {
     let post = await DB.findById(req.params.id).populate('user cat', '-password -__v');
+    if (!post) {
+          next(new Error('Post not found with that ID'));
+          return;
+    }
+    let comments = await commentDB.find({ postId: post._id });
+    post = post.toObject(); // Mongo Object to Object change
+    post['comments'] = comments;
     if (!post) {
         next(new Error('Post not found with that ID'));
         return;
