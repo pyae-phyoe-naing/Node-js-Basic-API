@@ -54,14 +54,25 @@ const drop = async (req, res, next) => {
 const byCatId = async (req, res, next) => {
     let cats = await DB.find({
         cat: req.params.id
-    }).populate('user cat','-password -__V');
+    }).populate('user cat tag', '-password -__V');
     responseMsg(res, true, 'Cat ID by post', cats);
+
+}
+const byTagId = async (req, res, next) => {
+    let tags = await DB.find({
+        tag: req.params.id
+    }).populate('user cat tag', '-password -__V');
+    if (tags.length < 1) {
+        next(new Error('Post not found with that Tag ID'));
+        return;
+    }
+    responseMsg(res, true, 'Tag ID by post', tags);
 
 }
 const byUserId = async (req, res, next) => {
     let cats = await DB.find({
         user: req.params.id
-    }).populate('user cat', '-password -__V');
+    }).populate('user cat tag', '-password -__V');
     responseMsg(res, true, 'User ID by post', cats);
 
 }
@@ -70,8 +81,8 @@ const paginate = async (req, res, next) => {
     page = page == 1 ? 0 : page - 1;
     let limit = Number(process.env.POST_LIMIT);
     let skipCount = limit * page;
-    let posts = await DB.find().skip(skipCount).limit(limit);
-    responseMsg(res,true,'Paginate Page',posts)
+    let posts = await DB.find().skip(skipCount).limit(limit).populate('user cat tag', '-password -__V');
+    responseMsg(res, true, 'Paginate Page', posts)
 }
 module.exports = {
     all,
@@ -80,6 +91,7 @@ module.exports = {
     update,
     drop,
     byCatId,
+    byTagId,
     byUserId,
     paginate
 }

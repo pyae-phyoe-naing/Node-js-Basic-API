@@ -10,6 +10,7 @@ router.get('/', controller.all);
 router.post('/', [validateToken, validateBody(PostSchema), saveFile, controller.add]);
 
 router.get('/cat/:id', validateParam(AllSchema.id, 'id'), controller.byCatId);
+router.get('/tag/:id', validateParam(AllSchema.id, 'id'), controller.byTagId);
 router.get('/user/:id', validateParam(AllSchema.id, 'id'), controller.byUserId);
 router.get('/paginate/:page',[validateParam(AllSchema.page,"page"),controller.paginate]);
 
