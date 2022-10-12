@@ -12,7 +12,16 @@ const postSchema = new Schema({
     cat: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref:'category'
+        ref: 'category'
+    },
+    tag: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'tag'
+    },
+    like: {
+        type: Number,
+        default: 0
     },
     title: {
         type: String,

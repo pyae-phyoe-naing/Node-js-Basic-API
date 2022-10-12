@@ -1,5 +1,4 @@
 const Joi = require('joi');
-
 module.exports = {
     RegisterSchema: Joi.object({
         name: Joi.string().required(),
@@ -24,7 +23,8 @@ module.exports = {
         user: Joi.optional()
     }),
     PostSchema: Joi.object({
-        cat: Joi.string().required(),
+        cat: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+        tag: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
         title: Joi.string().required(),
         desc: Joi.string().required(),
         user: Joi.optional()
