@@ -32,6 +32,9 @@ module.exports = {
     AllSchema: {
         id: Joi.object({
             id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
+        }),
+        page: Joi.object({
+            page: Joi.number().required()
         })
     }
 }

@@ -65,6 +65,14 @@ const byUserId = async (req, res, next) => {
     responseMsg(res, true, 'User ID by post', cats);
 
 }
+const paginate = async (req, res, next) => {
+    let page = req.params.page;
+    page = page == 1 ? 0 : page - 1;
+    let limit = Number(process.env.POST_LIMIT);
+    let skipCount = limit * page;
+    let posts = await DB.find().skip(skipCount).limit(limit);
+    responseMsg(res,true,'Paginate Page',posts)
+}
 module.exports = {
     all,
     add,
@@ -72,5 +80,6 @@ module.exports = {
     update,
     drop,
     byCatId,
-    byUserId
+    byUserId,
+    paginate
 }
