@@ -21,6 +21,7 @@ module.exports = {
     }),
     PostSchema: Joi.object({
         cat: Joi.string().required(),
+        tag: Joi.string().required(),
         title: Joi.string().required(),
         desc: Joi.string().required(),
         user: Joi.optional()
