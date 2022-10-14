@@ -76,10 +76,14 @@ const byUserId = async (req, res, next) => {
 
 }
 const byTagId = async (req, res, next) => {
-    let posts = await DB.find({tag: req.params.id }).populate('user cat tag', '-password -__V');
+    let posts = await DB.find({
+        tag: req.params.id
+    }).populate('user cat tag', '-password -__V');
     if (posts.length > 1) {
         for (let [index, post] of posts.entries()) {
-            let comments = await commentDB.find({ postId: post._id });
+            let comments = await commentDB.find({
+                postId: post._id
+            });
             post = post.toObject();
             post['comments'] = comments;
             posts[index] = post;
@@ -98,6 +102,36 @@ const paginate = async (req, res, next) => {
     let posts = await DB.find().skip(skipCount).limit(limit).populate('user cat tag', '-password -__V');
     responseMsg(res, true, 'Paginate Page', posts)
 }
+const toggleLike = async (req, res, next) => {
+    let post = await DB.findById(req.params.id);
+    if (post) {
+        if (req.params.likeCheck == 1) {
+            post.like = post.like + 1;
+
+        } else {
+            post.like > 0 ? post.like = post.like - 1 : post.like = 0;
+        }
+        await DB.findByIdAndUpdate(post._id, post);
+        let likePost = await DB.findById(post._id);
+        responseMsg(res, true, 'Like', likePost)
+    } else {
+        next(new Error('Post Not Found'));
+    }
+}
+const removeLike = async (req, res, next) => {
+    let post = await DB.findById(req.params.id);
+    if (post) {
+        if (post.like > 0) {
+            post.like = post.like - 1;
+            await DB.findByIdAndUpdate(post._id, post);
+            let likePost = await DB.findById(post._id);
+            responseMsg(res, true, 'You Like', likePost)
+        }
+
+    } else {
+        next(new Error('Post Not Found'));
+    }
+}
 module.exports = {
     all,
     add,
@@ -107,5 +141,6 @@ module.exports = {
     byCatId,
     byTagId,
     byUserId,
-    paginate
+    paginate,
+    toggleLike
 }

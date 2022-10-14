@@ -35,6 +35,9 @@ module.exports = {
         }),
         page: Joi.object({
             page: Joi.number().required()
-        })
+        }),
+         likeCheck: Joi.object({
+             likeCheck: Joi.number().required().valid(1,0)
+         })
     }
 }

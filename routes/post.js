@@ -12,7 +12,8 @@ router.post('/', [validateToken, validateBody(PostSchema), saveFile, controller.
 router.get('/cat/:id', validateParam(AllSchema.id, 'id'), controller.byCatId);
 router.get('/tag/:id', validateParam(AllSchema.id, 'id'), controller.byTagId);
 router.get('/user/:id', validateParam(AllSchema.id, 'id'), controller.byUserId);
-router.get('/paginate/:page',[validateParam(AllSchema.page,"page"),controller.paginate]);
+router.get('/paginate/:page', [validateParam(AllSchema.page, "page"), controller.paginate]);
+router.get('/like/toggle/:id/:likeCheck', [validateParam(AllSchema.id, 'id'),validateParam(AllSchema.likeCheck,'likeCheck'), controller.toggleLike]);
 
 router.route('/:id')
     .get(validateParam(AllSchema.id, 'id'), controller.get)
