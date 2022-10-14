@@ -8,7 +8,7 @@ const {
 } = require('../utils/gallery');
 
 const all = async (req, res, next) => {
-    let posts = await DB.find().populate('user cat', '-password -__v');
+    let posts = await DB.find().populate('user cat tag', '-password -__v');
     responseMsg(res, true, 'Get all posts', posts);
 }
 const add = async (req, res, next) => {
@@ -21,10 +21,12 @@ const add = async (req, res, next) => {
 const get = async (req, res, next) => {
     let post = await DB.findById(req.params.id).populate('user cat', '-password -__v');
     if (!post) {
-          next(new Error('Post not found with that ID'));
-          return;
+        next(new Error('Post not found with that ID'));
+        return;
     }
-    let comments = await commentDB.find({ postId: post._id });
+    let comments = await commentDB.find({
+        postId: post._id
+    });
     post = post.toObject(); // Mongo Object to Object change
     post['comments'] = comments;
     if (!post) {
@@ -66,17 +68,6 @@ const byCatId = async (req, res, next) => {
     responseMsg(res, true, 'Cat ID by post', cats);
 
 }
-const byTagId = async (req, res, next) => {
-    let tags = await DB.find({
-        tag: req.params.id
-    }).populate('user cat tag', '-password -__V');
-    if (tags.length < 1) {
-        next(new Error('Post not found with that Tag ID'));
-        return;
-    }
-    responseMsg(res, true, 'Tag ID by post', tags);
-
-}
 const byUserId = async (req, res, next) => {
     let cats = await DB.find({
         user: req.params.id
@@ -84,6 +75,21 @@ const byUserId = async (req, res, next) => {
     responseMsg(res, true, 'User ID by post', cats);
 
 }
+const byTagId = async (req, res, next) => {
+    let posts = await DB.find({tag: req.params.id }).populate('user cat tag', '-password -__V');
+    if (posts.length > 1) {
+        for (let [index, post] of posts.entries()) {
+            let comments = await commentDB.find({ postId: post._id });
+            post = post.toObject();
+            post['comments'] = comments;
+            posts[index] = post;
+        }
+        responseMsg(res, true, 'Tag ID by post', posts);
+    } else {
+        next(new Error('Post not found with that Tag ID'));
+    }
+}
+
 const paginate = async (req, res, next) => {
     let page = req.params.page;
     page = page == 1 ? 0 : page - 1;
