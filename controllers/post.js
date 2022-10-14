@@ -19,7 +19,7 @@ const add = async (req, res, next) => {
     responseMsg(res, true, 'Add new post', post);
 }
 const get = async (req, res, next) => {
-    let post = await DB.findById(req.params.id).populate('user cat', '-password -__v');
+    let post = await DB.findById(req.params.id).populate('user cat tag', '-password -email -phone -created -image -__v').select('title desc image');
     if (!post) {
         next(new Error('Post not found with that ID'));
         return;
